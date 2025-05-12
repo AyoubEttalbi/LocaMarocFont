@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "./styles/car-rental.css";
+
+/* Custom styles */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+@layer components {
+  .car-rental-app {
+    @apply font-sans;
+  }
+}

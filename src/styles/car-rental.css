@@ -1,0 +1,452 @@
+/* =============== CAR RENTAL CSS =============== */
+.hero-img-no-bg {
+  background: transparent !important;
+}
+:root {
+  --purple-color: #A78BFA;
+  --purple-hover: #8B5CF6;
+  --purple-light: rgba(167, 139, 250, 0.1);
+  --black-color: #1F2937;
+  --white-color: #FFFFFF;
+  --grey-color: #6B7280;
+  --grey-light: #F3F4F6;
+  --heading-font: 'Montserrat', sans-serif;
+  --body-font: 'Poppins', sans-serif;
+  --font-size-small: 0.875rem;
+  --font-size-normal: 1rem;
+  --font-size-medium: 1.25rem;
+  --font-size-large: 1.5rem;
+  --font-size-xlarge: 2rem;
+  --font-size-xxlarge: 3rem;
+}
+
+/* =============== GLOBAL STYLES =============== */
+.car-rental-app {
+  font-family: var(--body-font);
+  color: var(--black-color);
+  overflow-x: hidden;
+}
+
+.section__container {
+  padding-inline: 1.5rem;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.section__header {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  color: var(--black-color);
+  line-height: 1.2;
+}
+
+.section__description {
+  font-family: var(--body-font);
+  color: var(--grey-color);
+  line-height: 1.6;
+}
+
+/* =============== HEADER STYLES =============== */
+.header__content h1 {
+  font-family: var(--heading-font);
+  font-size: var(--font-size-xxlarge);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.header__content h2 {
+  font-family: var(--heading-font);
+  font-size: var(--font-size-large);
+  color: var(--purple-color);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.header__image {
+  position: relative;
+}
+
+.header__image::before {
+  position: absolute;
+  content: "";
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 5rem;
+  background-color: var(--purple-light);
+  border-top-left-radius: 2rem;
+  z-index: -1;
+}
+
+.header__image img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.5s ease;
+}
+
+.header__image:hover img {
+  transform: translateY(-5px) rotate(1deg);
+}
+
+/* Car wheel rotation animation on header image */
+.header__image .wheel {
+  animation: wheelRotation 8s linear infinite;
+  transform-origin: center;
+}
+
+.header__form {
+  margin-top: 2rem;
+}
+
+/* =============== ABOUT SECTION =============== */
+.about__container {
+  position: relative;
+}
+
+.about__card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.about__card::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: var(--purple-light);
+  border-radius: 50%;
+  top: -20px;
+  right: -20px;
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.about__card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.about__card:hover::before {
+  transform: scale(4);
+}
+
+/* =============== WHY CHOOSE US SECTION =============== */
+.choose__image img {
+  max-width: 100%;
+  transition: transform 0.5s ease;
+  position: relative;
+}
+
+.choose__image:hover img {
+  transform: scale(1.03) translateX(5px);
+}
+
+/* Add floating animation to stats cards */
+.choose__image .absolute {
+  transition: transform 0.5s ease;
+}
+
+.choose__image:hover .absolute {
+  animation: floatingCard 3s ease-in-out infinite;
+}
+
+.choose__card {
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.choose__card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, var(--purple-color), var(--purple-hover));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.choose__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.choose__card:hover::after {
+  transform: scaleX(1);
+}
+
+/* =============== TESTIMONIALS SECTION =============== */
+.client__container {
+  overflow: hidden;
+  position: relative;
+}
+
+.client__card {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 1rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.client__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: linear-gradient(to bottom, var(--purple-light), transparent);
+  transition: height 0.3s ease;
+  z-index: -1;
+}
+
+.client__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.client__card:hover::before {
+  height: 100%;
+}
+
+.client__rating {
+  transition: transform 0.3s ease;
+}
+
+.client__card:hover .client__rating {
+  transform: scale(1.1);
+}
+
+/* =============== SWIPER STYLES =============== */
+.swiper {
+  width: 100%;
+  padding-bottom: 50px;
+}
+
+.swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: var(--purple-color);
+  opacity: 0.5;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.swiper-pagination-bullet:hover {
+  transform: scale(1.2);
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background: var(--purple-color);
+  transform: scale(1.2);
+}
+
+/* =============== BUTTONS & INPUTS =============== */
+button.primary-button, 
+a.primary-button {
+  font-family: var(--heading-font);
+  background-color: var(--purple-color);
+  color: var(--white-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+button.primary-button::after, 
+a.primary-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: var(--purple-hover);
+  transition: height 0.3s ease;
+  z-index: -1;
+}
+
+button.primary-button:hover, 
+a.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
+}
+
+button.primary-button:hover::after, 
+a.primary-button:hover::after {
+  height: 100%;
+}
+
+.form-input {
+  font-family: var(--body-font);
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  background-color: #F9FAFB;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: var(--purple-color);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+  outline: none;
+}
+
+/* =============== ANIMATION CLASSES =============== */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+}
+
+.slide-in-right {
+  transform: translateX(50px);
+  opacity: 0;
+  animation: slideInRight 1s ease forwards;
+}
+
+.slide-in-left {
+  transform: translateX(-50px);
+  opacity: 0;
+  animation: slideInLeft 1s ease forwards;
+}
+
+.slide-in-bottom {
+  transform: translateY(50px);
+  opacity: 0;
+  animation: slideInBottom 1s ease forwards;
+}
+
+.car-drive-in {
+  transform: translateX(100%);
+  opacity: 0;
+  animation: carDriveIn 1.2s ease forwards;
+}
+
+.wheel-spin {
+  animation: wheelRotation 2s linear infinite;
+}
+
+/* =============== KEYFRAMES =============== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { 
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from { 
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  from { 
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes carDriveIn {
+  0% { 
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(5px);
+  }
+  100% { 
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes wheelRotation {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floatingCard {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* =============== RESPONSIVE STYLES =============== */
+@media screen and (max-width: 768px) {
+  .section__header {
+    font-size: var(--font-size-large);
+  }
+  
+  .header__content h1 {
+    font-size: var(--font-size-xlarge);
+  }
+  
+  .header__content h2 {
+    font-size: var(--font-size-medium);
+  }
+  
+  .about__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============== UTILITY CLASSES =============== */
+.text-purple {
+  color: var(--purple-color);
+}
+
+.bg-purple {
+  background-color: var(--purple-color);
+}
+
+.bg-purple-light {
+  background-color: var(--purple-light);
+}
+
+.shadow-hover:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+} 
