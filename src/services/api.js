@@ -64,7 +64,7 @@ export const carService = {
 
 // API methods for reservations
 export const reservationService = {
-  createReservation: (reservationData) => api.post('/admin/reservations', reservationData),
+  createReservation: (reservationData) => api.post('/reservations', reservationData),
   getUserReservations: () => api.get('/user/reservations'),
   getStaffReservations: () => api.get('/admin/reservations'),
   getAdminReservations: () => api.get('/admin/reservations'),

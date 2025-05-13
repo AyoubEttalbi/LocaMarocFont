@@ -275,12 +275,14 @@ export default function CarReservation() {
         accessories: selectedAccessories.map(id => id.trim()),
         insurance: selectedInsurance?.trim(),
         driver: selectedDriver === 'self' ? false : true,
+        // Set selectdriver to 1 (true) when 'With Driver' is selected and 0 (false) when 'Self-Drive' is selected
+        selectdriver: selectedDriver === 'driver' ? 1 : 0,
         total_cost: calculateTotalCost(),
         vehicle_id: selectedCar.id,
         payment_id : 1
       }
 
-      // await reservationService.createReservation(reservationData)
+      await reservationService.createReservation(reservationData)
       console.log(reservationData)
       setShowConfirmation(true)
     } catch (error) {

@@ -108,42 +108,7 @@ export default function Navbar() {
           >
             <NavLink href="/" label="Home" icon={<Home className="w-4 h-4" />} scrolled={scrolled} />
             
-            <div className="relative dropdown-trigger">
-              <button 
-                onClick={() => toggleDropdown('about')}
-                className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  scrolled 
-                    ? 'hover:bg-gray-100 text-gray-800 hover:text-purple-600' 
-                    : 'hover:bg-white/10 text-gray-800 hover:text-purple-600'
-                }`}
-              >
-                <Info className="w-4 h-4 mr-1.5" />
-                About
-                <ChevronDown className={`w-4 h-4 ml-1 transition-transform ${activeDropdown === 'about' ? 'rotate-180' : ''}`} />
-              </button>
-              
-              <AnimatePresence>
-                {activeDropdown === 'about' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-20"
-                  >
-                    <Link to="/#about" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      Our Story
-                    </Link>
-                    <Link to="/#team" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      Our Team
-                    </Link>
-                    <Link to="/#faq" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      FAQ
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <NavLink href="#about" label="About" icon={<Info className="w-4 h-4" />} scrolled={scrolled} />
             
             <NavLink href="/cars" label="Rental Deals" icon={<Car className="w-4 h-4" />} scrolled={scrolled} />
             <NavLink href="#choose" label="Why Choose Us" icon={<Award className="w-4 h-4" />} scrolled={scrolled} />
@@ -346,11 +311,21 @@ const NavLink = ({ href, label, icon, scrolled }) => {
         const header = document.querySelector('header');
         const headerHeight = header ? header.offsetHeight : 80;
         
+        // If we're already on the page with this hash, force a reflow to ensure the element is in the correct position
+        if (window.location.hash === href) {
+          window.scrollTo(0, 0);
+          // Force reflow
+          void target.offsetHeight;
+        }
+        
         // Smooth scroll to the position
         window.scrollTo({
-          top: target.getBoundingClientRect().top + window.pageYOffset - headerHeight,
+          top: target.offsetTop - headerHeight,
           behavior: 'smooth'
         });
+        
+        // Update URL without adding to history
+        window.history.replaceState(null, null, href);
       }
       return;
     }

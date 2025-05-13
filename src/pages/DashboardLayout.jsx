@@ -33,7 +33,6 @@ const DashboardLayout = ({ children }) => {
   const isStaff = user?.role === 'staff'
 
   // Redirect staff to reservations page if they try to access other admin pages
-  // Redirect staff to reservations page if they try to access other admin pages
   if (isStaff && !currentPath.includes('/admin/reservations') && currentPath !== '/dashboard' && !currentPath.includes('/admin/cars')) {
     return <Navigate to="/admin/reservations" replace />
   }
@@ -362,7 +361,7 @@ const DashboardLayout = ({ children }) => {
                           </div>
                         </div>
                         <a
-                          href="#"
+                          href="/profile"
                           className={`block px-4 py-2 text-sm ${
                             darkMode
                               ? "text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -373,7 +372,7 @@ const DashboardLayout = ({ children }) => {
                           Your Profile
                         </a>
                         <a
-                          href="#"
+                          href="/admin/settings"
                           className={`block px-4 py-2 text-sm ${
                             darkMode
                               ? "text-gray-300 hover:bg-gray-700 hover:text-white"
