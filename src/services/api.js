@@ -71,9 +71,57 @@ export const reservationService = {
   cancelReservation: (id) => api.delete(`/admin/reservations/${id}`),
   updateReservation: (id, reservationData) => api.put(`/admin/reservations/${id}`, reservationData),
   assignDriverToReservation: (id, driverId) => api.post(`/admin/reservations/${id}/assign-driver`, { driverId }),
-  downloadReservationPdf: (reservationId) => api.get(`/reservations/${reservationId}/pdf`, {
-    responseType: 'blob'
-  }),
+  downloadReservationPdf: async (reservationId) => {
+    console.log('Making request to download PDF for reservation ID:', reservationId)
+    try {
+      const response = await api.get(`/reservations/${reservationId}/pdf`, {
+        responseType: 'blob',
+        validateStatus: function (status) {
+          // Always resolve the promise for status codes less than 500
+          return status < 500;
+        }
+      });
+      
+      console.log('PDF download response status:', response.status);
+      
+      // If the response is not ok, try to parse the error message from the blob
+      if (response.status !== 200) {
+        const errorText = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsText(response.data);
+        });
+        
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          errorData = { message: 'Failed to parse error response' };
+        }
+        
+        const error = new Error(errorData.message || 'Failed to download PDF');
+        error.response = {
+          ...response,
+          data: errorData,
+          status: response.status,
+          statusText: response.statusText
+        };
+        throw error;
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Error in downloadReservationPdf:', error);
+      if (!error.response) {
+        error.response = {
+          status: 0,
+          statusText: 'Network Error',
+          data: { message: 'Network error occurred. Please check your connection.' }
+        };
+      }
+      throw error;
+    }
+  },
 };
 
 // API methods for user management

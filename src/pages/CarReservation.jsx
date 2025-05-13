@@ -99,6 +99,19 @@ export default function CarReservation() {
 
   // State management
   const [selectedCar, setSelectedCar] = useState(null)
+  const [reservationId, setReservationId] = useState(null)
+  
+  // Reset reservationId when component mounts
+  useEffect(() => {
+    console.log('Component mounted, resetting reservationId')
+    setReservationId(null)
+    
+    // Cleanup function to reset state when component unmounts
+    return () => {
+      console.log('Component unmounting, cleaning up')
+      setReservationId(null)
+    }
+  }, [])
   const [rentalDetails, setRentalDetails] = useState({
     pickupLocation: "",
     returnLocation: "",
@@ -208,23 +221,68 @@ export default function CarReservation() {
   }
 
   // Handle PDF download
-  const handleDownloadPdf = async (carId) => {
+  const handleDownloadPdf = async (id) => {
+    console.log('=== PDF Download Debug ===')
+    console.log('Current reservationId state:', reservationId)
+    console.log('Attempting to download PDF for reservation ID:', id)
+    
+    if (!id) {
+      const errorMsg = 'No reservation ID found. Please complete your reservation first.'
+      console.error(errorMsg)
+      alert(errorMsg)
+      return
+    }
+    
     try {
-      const response = await reservationService.downloadReservationPdf(carId)
+      console.log('Sending request to download PDF for reservation ID:', id)
+      const response = await reservationService.downloadReservationPdf(id)
+      console.log('PDF download response received:', response)
+      
+      if (!response || !response.data) {
+        throw new Error('No data received from server')
+      }
       
       // Create a blob URL and trigger download
       const blob = new Blob([response.data], { type: 'application/pdf' })
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `reservation-${carId}.pdf`
+      a.download = `reservation-${id}.pdf`
       document.body.appendChild(a)
       a.click()
+      
+      // Clean up
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
+      
+      console.log('PDF download initiated successfully')
     } catch (error) {
       console.error('Error downloading PDF:', error)
-      alert('Failed to download PDF. Please try again.')
+      
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Response status:', error.response.status)
+        console.error('Response data:', error.response.data)
+        
+        if (error.response.status === 404) {
+          alert('Reservation not found. The requested reservation does not exist or has been deleted.')
+        } else if (error.response.status === 403) {
+          alert('You do not have permission to access this reservation.')
+        } else if (error.response.status === 500) {
+          alert('Server error occurred while generating the PDF. Please try again later.')
+        } else {
+          alert(`Failed to download PDF. Server responded with status: ${error.response.status}`)
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request)
+        alert('No response from server. Please check your internet connection and try again.')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Request setup error:', error.message)
+        alert('Failed to download PDF. Please try again.')
+      }
     }
   }
 
@@ -282,8 +340,33 @@ export default function CarReservation() {
         payment_id : 1
       }
 
-      await reservationService.createReservation(reservationData)
-      console.log(reservationData)
+      const response = await reservationService.createReservation(reservationData)
+      console.log('=== Reservation Created ===')
+      console.log('Full response:', response)
+      console.log('Response data:', response.data)
+      
+      // The response has the reservation data in response.data.reservation
+      const reservation = response.data.reservation || response.data
+      console.log('Extracted reservation data:', reservation)
+      
+      if (!reservation) {
+        const errorMsg = 'No reservation data in response from server'
+        console.error(errorMsg, { response })
+        throw new Error(errorMsg)
+      }
+      
+      // Try different possible ID fields
+      const newReservationId = reservation.id || reservation.reservation_id
+      console.log('Extracted reservation ID:', newReservationId)
+      
+      if (!newReservationId) {
+        const errorMsg = 'No valid reservation ID found in response'
+        console.error(errorMsg, { reservation })
+        throw new Error(errorMsg)
+      }
+      
+      console.log('Setting new reservation ID in state:', newReservationId)
+      setReservationId(newReservationId)
       setShowConfirmation(true)
     } catch (error) {
       console.error("Error creating reservation:", error)
@@ -421,11 +504,12 @@ export default function CarReservation() {
             Browse More Cars
           </Link>
           <button
-            onClick={() => handleDownloadPdf(selectedCar.id)}
+            onClick={() => handleDownloadPdf(reservationId)}
             className="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md transition-colors duration-200 mt-4 sm:mt-0"
+            disabled={!reservationId}
           >
             <DownloadIcon className="h-5 w-5 mr-2" />
-            Download Reservation PDF
+            {reservationId ? 'Download Reservation PDF' : 'Processing...'}
           </button>
         </div>
       </motion.div>
@@ -1136,10 +1220,11 @@ export default function CarReservation() {
                             </button>
                           </div>
 
-                          {selectedCar && (
+                          {reservationId && (
                             <div className="mt-4">
                               <button
-                                onClick={() => handleDownloadPdf(selectedCar.id)}
+                                type="button"
+                                onClick={() => handleDownloadPdf(reservationId)}
                                 className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md transition-colors duration-200 flex items-center justify-center"
                               >
                                 <DownloadIcon className="h-5 w-5 mr-2" />
